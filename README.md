@@ -1,2 +1,2 @@
-# threads
-App for tire thread depth monitoring
+# treads
+App for tire tread depth monitoring
