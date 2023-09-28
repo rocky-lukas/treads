@@ -6,6 +6,8 @@ App for tire tread depth monitoring
 
 1. Clone this repository.
 2. Activate Python environment.
+3. Install Docker Desktop.
+4. Run local database instance.
 
 ## Python environment
 
@@ -64,3 +66,77 @@ by checking which `python` binary is being used:
 
 Calling `pyenv which python` will print path to Python binary, and we can see that it's located in "version" `treads` - 
 i.e. in our virtualenv.
+
+
+## Docker setup
+
+Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed. You can verify it by
+running following commands:
+
+```shell
+$ docker version                       
+Client: Docker Engine - Community
+ Version:           24.0.5
+...
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          24.0.5
+...
+
+# Run hello-world:
+$ docker run --rm hello-world
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+719385e32844: Pull complete 
+Digest: sha256:4f53e2564790c8e7856ec08e384732aa38dc43c52f02952483e3f003afbf23db
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+ 
+# Docker compose:
+$ docker compose version  
+Docker Compose version v2.20.2
+```
+
+Instead of running containers manually with `docker run`, we will use more convenient and declarative way, using `docker
+compose`. All parameters we would normally pass to `docker run` are contained in `docker-compose.yaml` file. But first
+need to set up initial administrator password.
+
+```shell
+echo "change-me-this-is-secret-password" > .secrets/postgres-password.txt 
+
+# Run all containers (and other Docker objects) defined in docker-compose.yaml in the background. 
+$ docker compose up -d
+
+# Show and follow logs from running containers.
+$ docker compose logs -f
+
+# List containers defined by docker-compose.yaml.
+$ docker compose ps -a
+
+# To terminate running containers (data volumes will be retained).
+$ docker compose down
+```
+
+While its container is running, database will be accessible on `localhost:5432`, e.g. via [pgAdmin](https://www.pgadmin.org/),
+using the password we set up in the `postgres-password.txt` file. 
